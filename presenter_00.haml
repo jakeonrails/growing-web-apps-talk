@@ -1,0 +1,15 @@
+- if source.status == :active
+  - if source.enterprise_state == 'MICRO_PENDING'
+    = render('subheaders/pending')
+  - elsif source.started_at && source.started_at > 6.hours.ago
+    = render('subheaders/new_campaign', url: source.url, current_user: @user)
+  - elsif source.enterprise_state == 'MICRO_APPROVED'
+    = render('subheaders/organizer_tools', url: source.url, id: source.id)
+  - else
+    = render('subheaders/default')
+- elsif source.status == :suspended
+  = render('subheaders/suspended')
+- elsif source.status.in?(:success, :redirect)
+  = render('subheaders/success', campaign: source)
+- elsif source.status == :failed
+  = render('subheaders/failed', campaign: source)
